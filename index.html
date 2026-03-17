@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Scanner App</title>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: auto; }
+        input, button { width: 100%; padding: 10px; margin: 5px 0; box-sizing: border-box; }
+        #reader { width: 100%; margin-bottom: 20px; }
+        .data-box { background: #f4f4f4; padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <h2>☁️ Live Cloud Scanner</h2>
+
+    <div id="reader"></div>
+
+    <div class="data-box">
+        <strong>Scanned Info:</strong>
+        <p id="scannedData">Awaiting scan...</p>
+    </div>
+
+    <h3>Input Dimensions:</h3>
+    <input type="number" id="length" placeholder="Length (cm)">
+    <input type="number" id="width" placeholder="Width (cm)">
+    <input type="number" id="thickness" placeholder="Thickness (cm)">
+    
+    <button id="saveBtn" onclick="sendToGoogle()" style="background-color: #28a745; color: white; border: none; font-size: 16px; margin-top: 10px;">
+        Save to Google Sheets
+    </button>
+
+    <script>
+        // --- PASTE YOUR GOOGLE WEB APP URL BELOW ---
+        const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbxC_P17yJITWW1kA4fkmRCiG7-NYOJqwO-A2nz3GkXMFtFhr8GV40dXCVHIosn66LX5sA/exec"; 
+        
+        let qrCodeData = "";
+
+        function onScanSuccess(decodedText, decodedResult) {
+            qrCodeData = decodedText;
+            document.getElementById("scannedData").innerText = qrCodeData;
+        }
+
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
+        html5QrcodeScanner.render(onScanSuccess, (error) => {});
+
+        function sendToGoogle() {
+            if (!qrCodeData) {
+                alert("Please scan a sticker first!");
+                return;
+            }
+
+            // Change button text to show it's working
+            let btn = document.getElementById("saveBtn");
+            btn.innerText = "Saving...";
+            btn.style.backgroundColor = "#6c757d";
+
+            let l = document.getElementById("length").value;
+            let w = document.getElementById("width").value;
+            let t = document.getElementById("thickness").value;
+
+            // Package the data
+            let formData = new FormData();
+            formData.append("info", qrCodeData);
+            formData.append("length", l);
+            formData.append("width", w);
+            formData.append("thickness", t);
+
+            // Send to Google Sheets
+            fetch(GOOGLE_URL, { method: "POST", body: formData })
+                .then(response => {
+                    alert("✅ Successfully saved to Google Sheets!");
+                    // Reset everything for the next scan
+                    qrCodeData = "";
+                    document.getElementById("scannedData").innerText = "Awaiting next scan...";
+                    document.getElementById("length").value = "";
+                    document.getElementById("width").value = "";
+                    document.getElementById("thickness").value = "";
+                    
+                    btn.innerText = "Save to Google Sheets";
+                    btn.style.backgroundColor = "#28a745";
+                })
+                .catch(error => {
+                    alert("❌ Error saving data. Check your internet connection.");
+                    btn.innerText = "Save to Google Sheets";
+                    btn.style.backgroundColor = "#28a745";
+                });
+        }
+    </script>
+</body>
+</html>
