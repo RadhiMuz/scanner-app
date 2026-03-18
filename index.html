@@ -25,6 +25,8 @@
 
     <h3>Input Dimensions:</h3>
     <input type="text" id="name" placeholder="Item Name">
+    <input type="text" id="material" placeholder="Material">
+    <input type="text" id="type" placeholder="Type">
     <input type="number" id="length" placeholder="Length (cm)">
     <input type="number" id="width" placeholder="Width (cm)">
     <input type="number" id="thickness" placeholder="Thickness (cm)">
@@ -60,6 +62,8 @@
             btn.style.backgroundColor = "#6c757d";
 
 	    let n = document.getElementById("name").value;
+	    let m = document.getElementById("material").value;
+	    let x = document.getElementById("type").value;
             let l = document.getElementById("length").value;
             let w = document.getElementById("width").value;
             let t = document.getElementById("thickness").value;
@@ -68,6 +72,8 @@
             let formData = new FormData();
             formData.append("info", qrCodeData);
 	    formData.append("name", n);
+	    formData.append("material", m);
+	    formData.append("type", x);
             formData.append("length", l);
             formData.append("width", w);
             formData.append("thickness", t);
@@ -80,6 +86,8 @@
                     qrCodeData = "";
                     document.getElementById("scannedData").innerText = "Awaiting next scan...";
 		    document.getElementById("name").value = "";
+		    document.getElementById("material").value = "";
+		    document.getElementById("type").value = "";
                     document.getElementById("length").value = "";
                     document.getElementById("width").value = "";
                     document.getElementById("thickness").value = "";
