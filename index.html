@@ -14,7 +14,7 @@
 </head>
 <body>
 
-    <h2>☁️ Live Cloud Scanner</h2>
+    <h2>Code Scanner</h2>
 
     <div id="reader"></div>
 
@@ -24,6 +24,7 @@
     </div>
 
     <h3>Input Dimensions:</h3>
+    <input type="varchar" id="name" placeholder="Item Name">
     <input type="number" id="length" placeholder="Length (cm)">
     <input type="number" id="width" placeholder="Width (cm)">
     <input type="number" id="thickness" placeholder="Thickness (cm)">
@@ -33,7 +34,7 @@
     </button>
 
     <script>
-        // --- PASTE YOUR GOOGLE WEB APP URL BELOW ---
+        // --- PASTE YOUR GOOGLE WEB APP URL BELOW inside the "" ---
         const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbxC_P17yJITWW1kA4fkmRCiG7-NYOJqwO-A2nz3GkXMFtFhr8GV40dXCVHIosn66LX5sA/exec"; 
         
         let qrCodeData = "";
@@ -58,13 +59,15 @@
             btn.innerText = "Saving...";
             btn.style.backgroundColor = "#6c757d";
 
+	    let n = document.getElementById("name").value;
             let l = document.getElementById("length").value;
             let w = document.getElementById("width").value;
             let t = document.getElementById("thickness").value;
-
+		
             // Package the data
             let formData = new FormData();
             formData.append("info", qrCodeData);
+	    formData.append("name", n);
             formData.append("length", l);
             formData.append("width", w);
             formData.append("thickness", t);
@@ -76,6 +79,7 @@
                     // Reset everything for the next scan
                     qrCodeData = "";
                     document.getElementById("scannedData").innerText = "Awaiting next scan...";
+		    document.getElementById("name").value = "";
                     document.getElementById("length").value = "";
                     document.getElementById("width").value = "";
                     document.getElementById("thickness").value = "";
