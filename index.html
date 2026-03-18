@@ -81,7 +81,7 @@
             // Send to Google Sheets
             fetch(GOOGLE_URL, { method: "POST", body: formData })
                 .then(response => {
-                    alert("✅ Successfully saved to Google Sheets!");
+                    alert("Successfully saved to Google Sheets!");
                     // Reset everything for the next scan
                     qrCodeData = "";
                     document.getElementById("scannedData").innerText = "Awaiting next scan...";
@@ -96,7 +96,7 @@
                     btn.style.backgroundColor = "#28a745";
                 })
                 .catch(error => {
-                    alert("❌ Error saving data. Check your internet connection.");
+                    alert("Error saving data. Check your internet connection.");
                     btn.innerText = "Save to Google Sheets";
                     btn.style.backgroundColor = "#28a745";
                 });
